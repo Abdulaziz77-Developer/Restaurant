@@ -135,6 +135,7 @@
             showEggQuality.Size = new Size(26, 31);
             showEggQuality.TabIndex = 6;
             showEggQuality.Text = "0";
+            showEggQuality.Click += showEggQuality_Click;
             // 
             // button3
             // 

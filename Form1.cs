@@ -13,7 +13,8 @@ namespace Restaurant
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int amount = int.Parse(amountQuantity.Text);
+            int amount = 0;
+            amount = int.Parse(amountQuantity.Text);
             string text = "";
             if (EggRadio.Checked == true)
             {
@@ -35,13 +36,13 @@ namespace Restaurant
                 }
                 order = employee.NewRequest(amount, text);
                 listResults.Text += employee.Inspect(order) + Environment.NewLine;
-               
+                showEggQuality.Text = $"{EggOrder.GetQuality()}";
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
+            amountQuantity.Text = "0";
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -49,7 +50,8 @@ namespace Restaurant
             try
             {
                 var order = employee.CopyWithRequest();
-                listResults.Text += employee + Environment.NewLine;
+                listResults.Text += employee.Inspect(order) + Environment.NewLine;
+                amountQuantity.Text = $"{(order is EggOrder ? ((EggOrder)order).GetQuantity() : "")}";
             }
             catch (Exception ex)
             {
@@ -62,12 +64,20 @@ namespace Restaurant
             try
             {
                 var result = employee.PrepareFood();
+                listResults.Text = "";
                 MessageBox.Show(result);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+            amountQuantity.Text = "";
+            listResults.Text = "";
+        }
+
+        private void showEggQuality_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

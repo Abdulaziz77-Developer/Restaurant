@@ -11,8 +11,11 @@ namespace Restaurant.Models
     {
         private object? order;
         public int counterForGet = 1;
+        private bool isForGet = true;
+        private bool IsPrepare = false;
         public object NewRequest(int quantity , string text)
         {
+            IsPrepare = true;
             if (counterForGet==1 || counterForGet == 2)
             {
                 if (text == "Egg")
@@ -30,6 +33,7 @@ namespace Restaurant.Models
                 if (string.Equals(text,"Egg"))
                 {
                     this.order = new ChickenOrder(quantity);
+                    
                 }
                 else
                 {
@@ -43,7 +47,7 @@ namespace Restaurant.Models
         {
             if (order is ChickenOrder)
             {
-                return "The Chicken is Ripe ";
+                return $"The Count of Chicken is {((ChickenOrder)order).GetQuantity()}";
             }
             else if(order is EggOrder)
             {
@@ -56,6 +60,7 @@ namespace Restaurant.Models
         }
         public object CopyWithRequest()
         {
+            IsPrepare = !IsPrepare;
             if (order == null)
             {
                 throw new ArgumentNullException("The employee has no request to  copy");
@@ -73,30 +78,47 @@ namespace Restaurant.Models
         }
         public string PrepareFood()
         {
-            if(order == null)
+            if (IsPrepare)
             {
-                throw new ArgumentNullException("Order Cannot be null");
-            }
-            else if(order is EggOrder)
-            {
-                for (int i = 1; i < ((EggOrder)order).GetQuantity(); i++)
+                if (order == null)
                 {
-                    ((EggOrder)order).DisCardShell();
-                    ((EggOrder)order).Crack();
-                    
+                    throw new ArgumentNullException("Order Cannot be null");
                 }
-                ((EggOrder)order).Cook();
-                return $"The Egg is Cooked {(EggOrder.GetQuality() > 25 ? "Egg is not Rotter" : "The Egg Is Rotten") }";
+                else if (order is EggOrder)
+                {
+                    for (int i = 1; i < ((EggOrder)order).GetQuantity(); i++)
+                    {
+                        ((EggOrder)order).DisCardShell();
+                        ((EggOrder)order).Crack();
+
+                    }
+                    ((EggOrder)order).Cook();
+                    if (isForGet)
+                    {
+                        isForGet = !isForGet;
+                        IsPrepare = false;
+                        return $"The Egg is Cooked {(EggOrder.GetQuality() > 25 ? "Egg is not Rotten" : "The Egg Is Rotten")}";
+                    }
+                    IsPrepare = false;
+                    return $"The Egg is Cooked ";
+                }
+                else
+                {
+                    for (int i = 1; i < ((ChickenOrder)order).GetQuantity(); i++)
+                    {
+                        ((ChickenOrder)order).Cutup();
+                    }
+                    ((ChickenOrder)order).Cook();
+                    IsPrepare = false;
+                    return "The Chicken is Cooked";
+                }
+                
             }
             else
             {
-                for (int i = 1; i < ((ChickenOrder)order).GetQuantity(); i++)
-                {
-                    ((ChickenOrder)order).Cutup();
-                }
-                ((ChickenOrder)order).Cook();
-                return "The Chicken is Cooked";
+                throw new Exception("Cannot Cooked it is again");
             }
+            
         }
     }
 }

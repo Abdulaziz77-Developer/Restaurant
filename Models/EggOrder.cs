@@ -10,7 +10,7 @@ namespace Restaurant.Models
     {
         public int quantity;
         public static int? quality;
-        private Random rand = new Random();
+        private static Random rand = new Random();
         public EggOrder(int _quantity)
         {
             quantity = _quantity;
@@ -22,9 +22,9 @@ namespace Restaurant.Models
         }
         public static  int? GetQuality()
         {
-            if (quality>25)
+            if (quality<=25)
             {
-                throw new Exception("The Egg Is Rotter");
+                throw new Exception("The Egg Is Rotten");
             }
             return quality;
         }
