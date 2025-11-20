@@ -10,12 +10,35 @@ namespace Restaurant
         {
             InitializeComponent();
         }
-
+        private void amountQuantity_Click(object sender, EventArgs e)
+        {
+            amountQuantity.Text = "";
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             int amount = 0;
-            amount = int.Parse(amountQuantity.Text);
-            string text = "";
+            try
+            {
+                if (int.TryParse(amountQuantity.Text, out amount))
+                {
+
+                }
+                else
+                {
+                    throw new Exception("Argument cannot be or empty ");
+                }
+                if (amount <= 0)
+                {
+                    throw new Exception("Order cannot  small or equals the zero");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+
+                string text = "";
             if (EggRadio.Checked == true)
             {
                 text = "Egg";
